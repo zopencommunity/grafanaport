@@ -1,0 +1,47 @@
+diff --git a/cmd/run.go b/cmd/run.go
+index 36cfd90..7ca6ff0 100644
+--- a/cmd/run.go
++++ b/cmd/run.go
+@@ -30,7 +30,8 @@ import (
+ 	"github.com/unknwon/com"
+ 	"github.com/unknwon/log"
+ 	"github.com/urfave/cli"
+-	"gopkg.in/fsnotify/fsnotify.v1"
++	// "gopkg.in/fsnotify/fsnotify.v1"
++    "github.com/fsnotify/fsnotify"
+ 
+ 	"github.com/unknwon/bra/internal/setting"
+ )
+diff --git a/cmd/sync.go b/cmd/sync.go
+index b843c30..c1a1cd4 100644
+--- a/cmd/sync.go
++++ b/cmd/sync.go
+@@ -25,7 +25,8 @@ import (
+ 	"github.com/unknwon/com"
+ 	"github.com/unknwon/log"
+ 	"github.com/urfave/cli"
+-	"gopkg.in/fsnotify/fsnotify.v1"
++	// "gopkg.in/fsnotify/fsnotify.v1"
++    "github.com/fsnotify/fsnotify"
+ 
+ 	"github.com/unknwon/bra/internal/setting"
+ )
+diff --git a/go.mod b/go.mod
+index d3e858c..c3d9ef3 100644
+--- a/go.mod
++++ b/go.mod
+@@ -4,10 +4,12 @@ go 1.13
+ 
+ require (
+ 	github.com/BurntSushi/toml v0.3.1
+-	github.com/fsnotify/fsnotify v1.4.7 // indirect
++	github.com/fsnotify/fsnotify v1.4.7
+ 	github.com/unknwon/com v1.0.1
+ 	github.com/unknwon/log v0.0.0-20150304194804-e617c87089d3
+ 	github.com/urfave/cli v1.22.1
+ 	golang.org/x/sys v0.0.0-20191020152052-9984515f0562 // indirect
+-	gopkg.in/fsnotify/fsnotify.v1 v1.4.7
++	// gopkg.in/fsnotify/fsnotify.v1 v1.4.7
+ )
++
++replace github.com/fsnotify/fsnotify => ../fsnotify

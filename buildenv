@@ -1,0 +1,150 @@
+# Update bump details accordingly. Use bump check to confirm.
+bump: grafana-version /GRAFANA_VERSION="(.*)"/ https://github.com/grafana/grafana.git|semver:*
+GRAFANA_VERSION="v10.4.2" # Specify a stable release
+export ZOPEN_STABLE_TAG="v${GRAFANA_VERSION}"
+export ZOPEN_STABLE_URL="https://github.com/grafana/grafana.git"
+export ZOPEN_STABLE_DEPS="comp_clang comp_go git make"
+export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="database devops"
+
+export ZOPEN_COMP=GO
+export ZOPEN_CONFIGURE="zopen_config"
+export ZOPEN_CONFIGURE_MINIMAL=1
+export ZOPEN_MAKE="skip"
+export ZOPEN_INSTALL="zopen_install"
+export ZOPEN_CHECK="skip"
+export ZOPEN_CLEAN="zopen_clean"
+
+zopen_init()
+{
+  export CGO_ENABLED=1
+  export GOTMPDIR=$PWD/go-tmpdir
+  mkdir -p $PWD/go-tmpdir
+  export PATH=$PATH:$GOROOT/go-build-zos/bin
+  export GOBIN=$ZOPEN_INSTALL_DIR/bin
+  mkdir -p $ZOPEN_INSTALL_DIR/bin
+}
+
+zopen_config()
+{
+  cd .. && echo ""
+  git clone https://github.com/mattn/go-sqlite3.git
+  echo "Checking out go-sqlite3"
+
+  # Building the DLL for go-sqlite3
+  cd go-sqlite3
+  clang -shared -fvisibility=default -o sqlite3-binding.so sqlite3-binding.c \
+    -DPATH_MAX=1023 \
+    -D_AE_BIMODAL=1 \
+    -D_ALL_SOURCE \
+    -U_ENHANCED_ASCII_EXT \
+    -D_ENHANCED_ASCII_EXT=0xFFFFFFFF \
+    -D_Export=extern \
+    -D_LARGE_TIME_API \
+    -D_OPEN_MSGQ_EXT \
+    -D_OPEN_SYS_FILE_EXT=1 \
+    -D_OPEN_SYS_SOCK_IPV6 \
+    -D_UNIX03_SOURCE \
+    -D_UNIX03_THREADS \
+    -D_UNIX03_WITHDRAWN \
+    -D_XOPEN_SOURCE=600 \
+    -D_XOPEN_SOURCE_EXTENDED \
+    -D_XPLATFORM_SOURCE=1 \
+    -D__static_assert=static_assert \
+    -D_POSIX_C_SOURCE=200809L \
+    -fasm \
+    -fzos-le-char-mode=ascii \
+    -isystem/usr/include \
+    -m64
+  chtag -tc1047 sqlite3-binding.x
+  mv ./sqlite3-binding.c ./sqlite3-binding.c.ignore
+
+  # This is to point to where the go-sqlite3 side deck is
+  git apply ../patches/sqlite3_go_patch
+  GO_SQLITE3_DIR=$(pwd)
+  sed -i "s#ZOPEN-REPLACE-DIR#${GO_SQLITE3_DIR}#g" sqlite3.go
+
+  cd .. && echo ""
+  git clone https://github.com/blevesearch/mmap-go.git blevesearch_mmap-go
+  cd blevesearch_mmap-go
+  git apply ../patches/blevesearch_mmap-go
+
+  cd .. && echo ""
+  git clone https://github.com/blugelabs/bluge.git
+  cd bluge
+  git apply ../patches/bluge_patch
+
+  cd .. && echo ""
+  git clone https://github.com/unknwon/bra.git
+  cd bra
+  git apply ../patches/bra_patch
+
+  cd .. && echo ""
+  git clone https://github.com/fsnotify/fsnotify.git
+  cd fsnotify
+  git apply ../patches/fsnotify_patch
+
+  cd .. && echo ""
+  git clone https://github.com/hashicorp/go-sockaddr.git
+  cd go-sockaddr
+  git apply ../patches/go-sockaddr_patch
+
+  cd .. && echo ""
+  git clone https://github.com/edsrzf/mmap-go.git
+  cd mmap-go
+  git apply ../patches/mmap-go_patch
+
+  cd .. && echo ""
+  git clone https://github.com/open-telemetry/opentelemetry-go.git --branch exporters/jaeger/v1.10.0
+  cd opentelemetry-go
+  git apply ../patches/opentelemetry-go_patch
+
+  cd .. && echo ""
+  git clone https://github.com/prometheus/prometheus.git --branch  v0.49.0
+  cd prometheus
+  git apply ../patches/prometheus_patch
+
+  cd .. && echo ""
+  git clone https://github.com/apache/thrift.git
+  cd thrift
+  git apply ../patches/thrift_patch
+
+  cd .. && echo ""
+  git clone https://github.com/golang/sys.git
+}
+
+zopen_install()
+{
+  mkdir -p $ZOPEN_INSTALL_DIR/lib
+  mv ./go-sqlite3/sqlite3-binding.so $ZOPEN_INSTALL_DIR/lib/sqlite3-binding.so
+  cd
+  echo "here at install: $PWD"
+  make deps-go
+  make build-go
+  mv bin/zos-s390x/grafana $ZOPEN_INSTALL_DIR/bin/grafana
+  mv bin/zos-s390x/grafana-cli $ZOPEN_INSTALL_DIR/bin/grafana-cli
+  mv bin/zos-s390x/grafana-server $ZOPEN_INSTALL_DIR/bin/grafana-server
+}
+
+zopen_clean()
+{
+  rm -rf ../murex ../go-sqlite3 ../fsnotify ../blevesearch_mmap-go ../bluge ../bra ../go-sockaddr ../grafana ../mmap-go ../opentelemetry-go ../prometheus ../sys ../thrift
+}
+
+zopen_check_results()
+{
+  dir="$1"
+  pfx="$2"
+  chk="$1/$2_check.log"
+
+  # Echo the following information to gauge build health
+  echo "actualFailures:0"
+  echo "totalTests:1"
+  echo "expectedFailures:0"
+  echo "expectedTotalTests:1"
+}
+
+zopen_get_version()
+{
+  echo "$MUREX_VERSION"
+}

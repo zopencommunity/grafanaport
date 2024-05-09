@@ -1,0 +1,24 @@
+diff --git a/lib/go/thrift/socket_non_unix_conn.go b/lib/go/thrift/socket_non_unix_conn.go
+index 75ed91dd4..6fa2b7c0b 100644
+--- a/lib/go/thrift/socket_non_unix_conn.go
++++ b/lib/go/thrift/socket_non_unix_conn.go
+@@ -1,5 +1,5 @@
+-//go:build windows || wasm
+-// +build windows wasm
++//go:build windows || wasm || zos
++// +build windows wasm zos
+ 
+ /*
+  * Licensed to the Apache Software Foundation (ASF) under one
+diff --git a/lib/go/thrift/socket_unix_conn.go b/lib/go/thrift/socket_unix_conn.go
+index ac0dce9e8..fb1fcc885 100644
+--- a/lib/go/thrift/socket_unix_conn.go
++++ b/lib/go/thrift/socket_unix_conn.go
+@@ -1,5 +1,5 @@
+-//go:build !windows && !wasm
+-// +build !windows,!wasm
++//go:build !windows && !wasm && !zos
++// +build !windows,!wasm !zos
+ 
+ /*
+  * Licensed to the Apache Software Foundation (ASF) under one

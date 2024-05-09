@@ -1,0 +1,30 @@
+diff --git a/index/directory_fs_nix.go b/index/directory_fs_nix.go
+index d8cc059..f3a79c8 100644
+--- a/index/directory_fs_nix.go
++++ b/index/directory_fs_nix.go
+@@ -12,8 +12,8 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
+-//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd
+-// +build darwin dragonfly freebsd linux netbsd openbsd
++//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd || zos
++// +build darwin dragonfly freebsd linux netbsd openbsd zos
+ 
+ package index
+ 
+diff --git a/index/lock/lock_nix.go b/index/lock/lock_nix.go
+index 8ed7543..d916a30 100644
+--- a/index/lock/lock_nix.go
++++ b/index/lock/lock_nix.go
+@@ -12,8 +12,8 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
+-//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd
+-// +build darwin dragonfly freebsd linux netbsd openbsd
++//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd || zos
++// +build darwin dragonfly freebsd linux netbsd openbsd zos
+ 
+ package lock
+ 

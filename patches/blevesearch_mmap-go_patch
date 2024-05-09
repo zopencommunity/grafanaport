@@ -1,0 +1,13 @@
+diff --git a/mmap_unix.go b/mmap_unix.go
+index 25b13e5..75914ac 100644
+--- a/mmap_unix.go
++++ b/mmap_unix.go
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+-// +build darwin dragonfly freebsd linux openbsd solaris netbsd
++// +build darwin dragonfly freebsd linux openbsd solaris netbsd zos
+ 
+ package mmap
+ 
