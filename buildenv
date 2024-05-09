@@ -145,5 +145,5 @@ zopen_check_results()
 
 zopen_get_version()
 {
-  echo "$MUREX_VERSION"
+  echo "$GRAFANA_VERSION"
 }
