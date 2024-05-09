@@ -1,0 +1,12 @@
+diff --git a/sqlite3.go b/sqlite3.go
+index ed2a9e2..bf18973 100644
+--- a/sqlite3.go
++++ b/sqlite3.go
+@@ -10,6 +10,7 @@
+ package sqlite3
+ 
+ /*
++#cgo zos LDFLAGS: ZOPEN-REPLACE-DIR/sqlite3-binding.x
+ #cgo CFLAGS: -std=gnu99
+ #cgo CFLAGS: -DSQLITE_ENABLE_RTREE
+ #cgo CFLAGS: -DSQLITE_THREADSAFE=1

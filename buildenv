@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
-bump: grafana-version /GRAFANA_VERSION="(.*)"/ https://github.com/grafana/grafana.git|semver:*
-GRAFANA_VERSION="v10.4.2" # Specify a stable release
+# bump: grafana-version /GRAFANA_VERSION="(.*)"/ https://github.com/grafana/grafana.git|semver:*
+GRAFANA_VERSION="10.4.2" # Specify a stable release
 export ZOPEN_STABLE_TAG="v${GRAFANA_VERSION}"
 export ZOPEN_STABLE_URL="https://github.com/grafana/grafana.git"
 export ZOPEN_STABLE_DEPS="comp_clang comp_go git make"
@@ -21,7 +21,6 @@ zopen_init()
   export GOTMPDIR=$PWD/go-tmpdir
   mkdir -p $PWD/go-tmpdir
   export PATH=$PATH:$GOROOT/go-build-zos/bin
-  export GOBIN=$ZOPEN_INSTALL_DIR/bin
   mkdir -p $ZOPEN_INSTALL_DIR/bin
 }
 
@@ -29,7 +28,6 @@ zopen_config()
 {
   cd .. && echo ""
   git clone https://github.com/mattn/go-sqlite3.git
-  echo "Checking out go-sqlite3"
 
   # Building the DLL for go-sqlite3
   cd go-sqlite3
@@ -67,10 +65,10 @@ zopen_config()
   cd .. && echo ""
   git clone https://github.com/blevesearch/mmap-go.git blevesearch_mmap-go
   cd blevesearch_mmap-go
-  git apply ../patches/blevesearch_mmap-go
+  git apply ../patches/blevesearch_mmap-go_patch
 
   cd .. && echo ""
-  git clone https://github.com/blugelabs/bluge.git
+  git clone https://github.com/blugelabs/bluge.git --branch v0.1.9
   cd bluge
   git apply ../patches/bluge_patch
 
@@ -117,7 +115,8 @@ zopen_install()
 {
   mkdir -p $ZOPEN_INSTALL_DIR/lib
   mv ./go-sqlite3/sqlite3-binding.so $ZOPEN_INSTALL_DIR/lib/sqlite3-binding.so
-  cd
+  cd grafana
+  git apply ../patches/grafana_gomod_patch
   echo "here at install: $PWD"
   make deps-go
   make build-go
