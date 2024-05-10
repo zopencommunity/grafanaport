@@ -21,7 +21,6 @@ zopen_init()
   export GOTMPDIR=$PWD/go-tmpdir
   mkdir -p $PWD/go-tmpdir
   export PATH=$PATH:$GOROOT/go-build-zos/bin
-  mkdir -p $ZOPEN_INSTALL_DIR/bin
 }
 
 zopen_config()
@@ -114,15 +113,16 @@ zopen_config()
 zopen_install()
 {
   mkdir -p $ZOPEN_INSTALL_DIR/lib
+  mkdir -p $ZOPEN_INSTALL_DIR/bin
   mv ./go-sqlite3/sqlite3-binding.so $ZOPEN_INSTALL_DIR/lib/sqlite3-binding.so
   cd grafana
   git apply ../patches/grafana_gomod_patch
   echo "here at install: $PWD"
   make deps-go
   make build-go
-  mv bin/zos-s390x/grafana $ZOPEN_INSTALL_DIR/bin/grafana
-  mv bin/zos-s390x/grafana-cli $ZOPEN_INSTALL_DIR/bin/grafana-cli
-  mv bin/zos-s390x/grafana-server $ZOPEN_INSTALL_DIR/bin/grafana-server
+  mv ./bin/zos-s390x/grafana $ZOPEN_INSTALL_DIR/bin/grafana
+  mv ./bin/zos-s390x/grafana-cli $ZOPEN_INSTALL_DIR/bin/grafana-cli
+  mv ./bin/zos-s390x/grafana-server $ZOPEN_INSTALL_DIR/bin/grafana-server
 }
 
 zopen_clean()
