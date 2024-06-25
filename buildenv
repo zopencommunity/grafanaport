@@ -1,6 +1,6 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: grafana-version /GRAFANA_VERSION="(.*)"/ https://github.com/grafana/grafana.git|semver:*
-GRAFANA_VERSION="11.0.0" # Specify a stable release
+GRAFANA_VERSION="11.1.0" # Specify a stable release
 export ZOPEN_STABLE_TAG="v${GRAFANA_VERSION}"
 export ZOPEN_STABLE_URL="https://github.com/grafana/grafana.git"
 export ZOPEN_STABLE_DEPS="comp_clang comp_go git make"
