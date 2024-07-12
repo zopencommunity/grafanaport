@@ -3,7 +3,7 @@
 GRAFANA_VERSION="11.1.0" # Specify a stable release
 export ZOPEN_STABLE_TAG="v${GRAFANA_VERSION}"
 export ZOPEN_STABLE_URL="https://github.com/grafana/grafana.git"
-export ZOPEN_STABLE_DEPS="comp_clang comp_go git make"
+export ZOPEN_STABLE_DEPS="comp_clang comp_go git make parse-gotest"
 export ZOPEN_BUILD_LINE="STABLE"
 export ZOPEN_CATEGORIES="database devops"
 
@@ -12,7 +12,7 @@ export ZOPEN_CONFIGURE="zopen_config"
 export ZOPEN_CONFIGURE_MINIMAL=1
 export ZOPEN_MAKE="skip"
 export ZOPEN_INSTALL="zopen_install"
-export ZOPEN_CHECK="skip"
+export ZOPEN_CHECK="zopen_check"
 export ZOPEN_CLEAN="zopen_clean"
 
 zopen_init()
@@ -97,7 +97,7 @@ zopen_config()
   git apply ../patches/opentelemetry-go_patch
 
   cd .. && echo ""
-  git clone https://github.com/prometheus/prometheus.git --branch  v0.49.0
+  git clone https://github.com/prometheus/prometheus.git --branch  v0.52.0
   cd prometheus
   git apply ../patches/prometheus_patch
 
@@ -130,15 +130,24 @@ zopen_clean()
   rm -rf ../murex ../go-sqlite3 ../fsnotify ../blevesearch_mmap-go ../bluge ../bra ../go-sockaddr ../grafana ../mmap-go ../opentelemetry-go ../prometheus ../sys ../thrift
 }
 
+zopen_check()
+{
+    go list -f '{{.Dir}}/...' -m | xargs go test -short -timeout=30m
+}
+
 zopen_check_results()
 {
   dir="$1"
   pfx="$2"
   chk="$1/$2_check.log"
 
+  summary="$(parse-gotest -summary $chk)"
+  total=$(echo "$summary" | grep "total" | cut -d':' -f2)
+  fail=$(echo "$summary" | grep "fail" | cut -d':' -f2)
+
   # Echo the following information to gauge build health
-  echo "actualFailures:0"
-  echo "totalTests:1"
+  echo "actualFailures:$fail"
+  echo "totalTests:$total"
   echo "expectedFailures:0"
   echo "expectedTotalTests:1"
 }
