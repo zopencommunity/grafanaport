@@ -1,15 +1,13 @@
 diff --git a/tsdb/fileutil/flock_unix.go b/tsdb/fileutil/flock_unix.go
-index 9637f073b..e2c095289 100644
+index 25de0ffb2..1df7cc333 100644
 --- a/tsdb/fileutil/flock_unix.go
 +++ b/tsdb/fileutil/flock_unix.go
-@@ -11,8 +11,8 @@
+@@ -11,7 +11,7 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
  
 -//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd
--// +build darwin dragonfly freebsd linux netbsd openbsd
 +//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd || zos
-+// +build darwin dragonfly freebsd linux netbsd openbsd zos
  
  package fileutil
  
