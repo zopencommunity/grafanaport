@@ -3,7 +3,7 @@
 GRAFANA_VERSION="11.1.3" # Specify a stable release
 export ZOPEN_STABLE_TAG="v${GRAFANA_VERSION}"
 export ZOPEN_STABLE_URL="https://github.com/grafana/grafana.git"
-export ZOPEN_STABLE_DEPS="comp_clang comp_go git make"
+export ZOPEN_STABLE_DEPS="check_clang check_go git make"
 export ZOPEN_BUILD_LINE="STABLE"
 export ZOPEN_CATEGORIES="database devops"
 
